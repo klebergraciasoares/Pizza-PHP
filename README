@@ -1,0 +1,63 @@
+Pizza PHP is an open source Model-View-Controller PHP framework that's 
+hotter than a pizza fresh out the oven!
+
+Inspired by my years of experience with writing PHP applications and
+other frameworks like Code Igniter and Ruby on Rails, Pizza PHP is
+designed to quickly and easily give you structure to your new PHP
+application and to offer libraries with commonly used functions.
+
+It is not meant to replace a framework such as Zend, but is instead meant
+to complement larger frameworks and your own code.
+
+
+Pizza PHP is in early days (and hence the complete lack of documentation),
+but so far Pizza PHP offers the following features:
+
+- The ability to organise your code into themes, controllers, views and
+libraries.
+
+- Clean, human-readable URLs in the format /page/param1/param2/param3...
+
+- Routing, so you can still give your parameters meaningful names in your
+controllers and views. Also allows you to change which controller, view or
+theme to load for each page, and even load a different file based on the
+number of parameters received.
+
+- Database wrapper library for cleaner, easier access to a MySQL database
+so you can do your database accesses in far fewer lines of code.
+
+
+
+
+Pizza PHP is released open source under New BSD.
+
+However, if you do decide to add additions to the software, it would be
+much appreciated if these changes were offered back to the original 
+development repository under the New BSD license.
+
+The license for the software is written in full below:
+
+Copyright (c) 2011, Robert Pamely
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Pizza PHP nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL ROBERT PAMELY BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
