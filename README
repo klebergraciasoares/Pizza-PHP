@@ -29,11 +29,17 @@ so you can do your database accesses in far fewer lines of code.
 
 
 
-Pizza PHP is released open source under New BSD.
+The Pizza PHP software is released open source under New BSD.
 
 However, if you do decide to add additions to the software, it would be
 much appreciated if these changes were offered back to the original 
 development repository under the New BSD license.
+
+The name, trademarks, documentation, promotional content and any branding of 
+Pizza PHP (including, but not limited to, any graphics, such as logos) remain 
+the property of Robert Pamely, copyrighted with all rights reserved, and may 
+not be used in any form, with the exception of the name which may be used when 
+complying with the license for the software.
 
 The license for the software is written in full below:
 
