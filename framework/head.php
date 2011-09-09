@@ -43,7 +43,7 @@ foreach ($loadmodules as $module) {
 unset($module);
 unset($loadmodules);
 
-include(dirname(__FILE__) . '/../libraryheader.php');
+include(dirname(__FILE__) . '/../appheader.php');
 
 // include the correct controller
 if(!empty($controller) && file_exists(realpath(dirname(__FILE__) . '/../controllers/'.$controller.'_con.php'))) {
