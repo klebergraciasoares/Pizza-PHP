@@ -46,6 +46,7 @@ class MySQLDatabase
 	}
 	
 	public function selectFirst($columns, $table, $condition = '', $result_type = MYSQL_ASSOC) {
+		$columns = $this->escapeString($columns);
 		$sql = "SELECT $columns FROM $table";
 		
 		if(!empty($condition)) {
@@ -76,7 +77,23 @@ class MySQLDatabase
 	}
 	
 	public function escapeString($string) {
+		if(empty($string)) {
+			return $string;
+		}
+	
+		if(is_array($string)) {
+			return array_map($this->escapeString, $string);
+		}
+	
+		$this->connect();
 		return mysql_real_escape_string($string, $this->con);
+	}
+	
+	public function log($string, $type) {
+		$type = intval($type);
+		$string = $this->escapeString($string);
+		
+		return $this->query("INSERT INTO PizzaLog (value, type) VALUES ($string, $type);");
 	}
 	
 	function __deconstruct() {

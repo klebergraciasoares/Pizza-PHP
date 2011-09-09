@@ -26,6 +26,9 @@ number of parameters received.
 - Database wrapper library for cleaner, easier access to a MySQL database
 so you can do your database accesses in far fewer lines of code.
 
+- Debug mode so you can hide all of your debugging print statements by changing
+one setting. However, you can still log important events to the database, all
+on the same line.
 
 
 

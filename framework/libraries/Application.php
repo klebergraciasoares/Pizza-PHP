@@ -4,12 +4,13 @@ class Application
 {
 	private $param;
 	private $root;
+	private $debugging;
 	private $paramcount;
 	
-	function __construct($root, $param) {
+	function __construct($root, $param, $debugging) {
 		$this->root = $root;
 		$this->param = $param;
-		
+		$this->errors = $errors;
 		// count the number of parameters
 		$this->paramcount = 0;
 		while($this->paramcount<count($param) && !empty($param[$this->paramcount])) {
@@ -32,8 +33,7 @@ class Application
 	}
 	
 	public function link($page, $includeparameters = true) {
-		$url = $this->root . '/';
-		$url .= $page;
+		$url = $this->root . '/' . $page;
 		
 		if($includeparameters==true) {
 			for($i = 0; $i<count($this->param) && !empty($this->param[$i]); $i++) {
@@ -44,12 +44,28 @@ class Application
 		return $url;
 	}
 	
+	public function errecho($string, $log = false, $type = 0, &$db = NULL, $alwayslog = false) {
+		if($this->debugging==true) {
+			echo $string;
+		}
+		
+		if($log==true && $db!=NULL && ($this->debugging==true || $alwayslog==true)) {
+			return $db->log($string, $type);
+		}
+		
+		return true;
+	}
+	
 	public function getParameterCount() {
 		return $this->paramcount;
 	}
 	
-	public function getRoot() {
+	public function __get($root) {
 		return $this->root;
+	}
+	
+	public function isDebuggingOn() {
+		return $this->debugging;
 	}
 }
 

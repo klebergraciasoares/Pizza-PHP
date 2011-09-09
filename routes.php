@@ -22,5 +22,11 @@ $routes = array(
 	'home' => array(
 		'theme' => 'home',
 	),
+	
+	'example2' => array(
+		// setting the theme to Pizza\NOTHEME will run the controller but
+		// will not show a view
+		'theme' => Pizza\NOTHEME,
+	),
 );
 ?>
