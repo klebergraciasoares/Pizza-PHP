@@ -59,7 +59,7 @@ class Form
 	function __construct($formarray) {
 		$this->formarray = $formarray;
 		
-		$this->formarray['PizzaSubmitCheck'] = array(
+		$this->formarray['PizzaSubmitCheck' . $formarray['PizzaFormDetails']['name']] = array(
 			'type' => 'hidden',
 			'defaultvalue' => '1',
 		);
@@ -68,11 +68,11 @@ class Form
 	private function echoStructureElement($element, $details) {
 		$output = "<$element";
 	
-		$temp = !empty(strval($details['name'])) ? strval($details['name']) : '';
+		$temp = !empty($details['name']) ? strval($details['name']) : '';
 		
 		$output .= " name=\"$temp\"";
 		
-		$temp = !empty(strval($details['id'])) ? strval($details['id']) : $temp;
+		$temp = !empty($details['id']) ? strval($details['id']) : $temp;
 		$output .= " id=\"$temp\"";
 		
 		foreach ($details as $key => &$value) {
@@ -80,7 +80,7 @@ class Form
 				continue;
 			}
 			
-			if(!empty(strval($value))) {
+			if(!empty($value)) {
 				$value = strval($value);
 				$output .= " $key=\"$value\"";
 			} else {
@@ -143,7 +143,7 @@ class Form
 			}
 		}
 		
-		$output .= $this->echoElement('PizzaSubmitCheck');
+		$output .= $this->echoElement('PizzaSubmitCheck' . $formarray['PizzaFormDetails']['name']);
 		$output .= '</form>';
 		
 		echo $output;
@@ -154,11 +154,11 @@ class Form
 		
 		$details = $this->formarray['PizzaFormDetails'];
 		
-		$temp = !empty(strval($details['name'])) ? strval($details['name']) : '';
+		$temp = !empty($details['name']) ? strval($details['name']) : '';
 		
 		$output .= " name=\"$temp\"";
 		
-		$temp = !empty(strval($details['id'])) ? strval($details['id']) : $temp;
+		$temp = !empty($details['id']) ? strval($details['id']) : $temp;
 		$output .= " id=\"$temp\"";
 		
 		foreach ($details as $key => &$value) {
@@ -166,7 +166,7 @@ class Form
 				continue;
 			}
 			
-			if(!empty(strval($value))) {
+			if(!empty($value)) {
 				$value = strval($value);
 				$output .= " $key=\"$value\"";
 			} else {
@@ -202,16 +202,16 @@ class Form
 		} else {
 			$output = '<input' . $output;
 			
-			$temp = !empty(strval($formvalues['type'])) ? strval($formvalues['type']) : 'text';
+			$temp = !empty($formvalues['type']) ? strval($formvalues['type']) : 'text';
 			$output .= " type=\"$temp\"";
 			
 			$type = $temp;
 			
-			if($showenteredvalue==true && !empty(strval($formvalues['enteredvalue'])) && $type!='password') {
+			if($showenteredvalue==true && !empty($formvalues['enteredvalue']) && $type!='password') {
 				$temp = strval($formvalues['enteredvalue']);
 				$output .= " value=\"$temp\"";
 			} else {
-				$temp = !empty(strval($formvalues['defaultvalue'])) ? strval($formvalues['defaultvalue']) : '';
+				$temp = !empty($formvalues['defaultvalue']) ? strval($formvalues['defaultvalue']) : '';
 				$output .= " value=\"$temp\"";
 			}
 			
@@ -220,7 +220,7 @@ class Form
 					continue;
 				}
 				
-				if(!empty(strval($value))) {
+				if(!empty($value)) {
 					$value = strval($value);
 					$output .= " $key=\"$value\"";
 				} else {
@@ -272,7 +272,7 @@ class Form
 	}
 	
 	public function checkFormSubmitted() {
-		if ($this->formarray['PizzaSubmitCheck']['enteredvalue']=='1') {
+		if ($this->formarray['PizzaSubmitCheck' . $formarray['PizzaFormDetails']['name']]['enteredvalue']=='1') {
 			return true;
 		}
 		
@@ -281,5 +281,13 @@ class Form
 	
 	public function isValid() {
 		return $this->validate();
+	}
+	
+	public function getValue($fieldname) {
+		if(!empty($this->formarray[$fieldname]['enteredvalue'])) {
+			return $this->formarray[$fieldname]['enteredvalue'];
+		}
+		
+		return '';
 	}
 }

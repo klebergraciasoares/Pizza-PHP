@@ -20,8 +20,7 @@ class User {
 	private function deleteOldSessions(&$db) {
 		$maxtime = $GLOBALS['maxsessionperiod'];
 		
-		// TODO: DELETE ALL OLDER THAN MAX SESSION PERIOD
-		$sql = '';
+		$sql = 'DELETE FROM PizzaUserSessions WHERE (timestamp+$maxtime)>NOW();';
 		$db->query($sql);
 	}
 	
@@ -42,7 +41,7 @@ class User {
 		
 		session_destroy();
 		
-		setcookie('PizzaUserSession', '', time()-3600);
+		setcookie('PizzaUserSession', '', time()-3600, '/', $GLOBALS['cookiedomain']);
 		
 		session_start();
 		session_regenerate_id(true);
@@ -58,9 +57,6 @@ class User {
 	
 	// TODO: ADD MAXIMUM NUMBER OF TRIES
 	// TODO: LOG LOGIN ATTEMPTS
-	// TODO: COOKIE DOMAIN
-	// TODO: SESSION EXPIRE IN SETTINGS
-	// TODO: SETTING TO HAVE MAXIMUM NUMBER OF LOGIN SESSIONS
 	public function login($username, $password, &$db) {
 		User::logout($db);
 		
@@ -68,16 +64,21 @@ class User {
 	
 		$row = $db->selectFirst('PizzaUserID, password, salt', 'PizzaUser', $this->usernamefield."='$username'");
 		
-		if(mysql_num_rows($row)<1) {
+		if (mysql_num_rows($row)<1) {
 			return false;
 		}
 		
-		if($this->encryptPassword($password, $row['salt'])==$row['password']) {
+		if ($this->encryptPassword($password, $row['salt'])==$row['password']) {
 			$_SESSION['PizzaUserID'] = $row['PizzaUserID'];
 			$_SESSION['PizzaUserTime'] = strtotime('now');
 			$_SESSION['PizzaUserBrowser'] = md5($_SERVER['HTTP_USER_AGENT'] . $GLOBALS['random2']);
 			
 			$userid = $row['PizzaUserID'];
+			
+			// if logged in the maximum number of allowed times
+			if ($db->count('PizzaUserSessions', "PizzaUserID='$userid'")>=$GLOBALS['maxusersessions']) {
+				return false;
+			}
 		
 			// try to make a new session id 10 times
 			for ($i = 0, $result = false; $result==false && $i<10; $i++) {
@@ -88,13 +89,13 @@ class User {
 				$result = $db->query($sql);
 			}
 			
-			if($result==false) {
+			if ($result==false) {
 				User::logout($db);
 				return false;
 			}
 			
 			// set equal to expire time
-			setcookie('PizzaUserSession', $session, time()+$GLOBALS['maxsessionperiod']);
+			setcookie('PizzaUserSession', $session, time()+$GLOBALS['maxsessionperiod'], '/', $GLOBALS['cookiedomain']);
 		
 			return true;
 		}

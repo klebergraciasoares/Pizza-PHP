@@ -4,7 +4,6 @@
 
 TODO: IMPLEMENT THE FOLLOWING
 
-'email',
 'ukpostcode',
 'datetime' => 'date string here',
 
@@ -13,6 +12,7 @@ IMPLEMENTED:
 'ascii',
 'alphanumeric',
 'numeric',
+'email',
 'decimal' => 2,
 'url',
 'presence',
@@ -34,7 +34,7 @@ class Validate {
 		return false;
 	}
 	
-	public function isEmailAddress {
+	public function isEmailAddress($string) {
 		return $this->regex($string, '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$');
 	}
 	
@@ -81,27 +81,31 @@ class Validate {
 	public function autoValidate($type, $value, $validationparameter) {
 	
 		switch ($type) {
-			'ascii':
+			case 'ascii':
 				return $this->isASCII($value);
-			'alphanumeric':
+			case 'alphanumeric':
 				return $this->isAlphaNumeric($value);
-			'numeric':
+			case 'numeric':
 				return $this->isNumeric($value);
-			'decimal':
+			case 'decimal':
 				return $this->decimal($value, $validationparameter);
-			'presence':
+			case 'email':
+				return $this->isEmail($value);
+			case 'url':
+				return $this->isURL($value, $validationparameter);
+			case 'presence':
 				return $this->isPresent($value);
-			'minlength':
+			case 'minlength':
 				return $this->hasMinLength($value);
-			'maxlength':
+			case 'maxlength':
 				return $this->hasMaxLength($value);
-			'sameas':
+			case 'sameas':
 				return $this->equal($value, $validationparameter);
-			'regex':
+			case 'regex':
 				return $this->regex($value, $validationparameter);
-			'custom':
+			case 'custom':
 				return $validationparameter($value);
-			'default'
+			default:
 				return false;
 		}
 	}
