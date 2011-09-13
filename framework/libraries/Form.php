@@ -20,10 +20,10 @@ $form = array(
 		'fieldset' => array (
 			'PizzaElementDetails' => array(
 				'name' => 'name',
-			);
+			),
 			'firstname',
-		);
-	);
+		),
+	),
 
 	'firstname' => array(
 		'id' => 'firstname',
@@ -75,7 +75,7 @@ class Form
 		$temp = !empty(strval($details['id'])) ? strval($details['id']) : $temp;
 		$output .= " id=\"$temp\"";
 		
-		foreach ($details as $key => $value) {
+		foreach ($details as $key => &$value) {
 			if($key=='id' || $key=='name') {
 				continue;
 			}
@@ -98,13 +98,13 @@ class Form
 			return;
 		}
 		
-		foreach ($structure as $key => $value) {
+		foreach ($structure as $key => &$value) {
 		
 			if(isset($this->formarray[$key])) {
 			
 				if(!empty($value) && $value=='label') {
 					$this->echoLabel($key);
-				} else if($value=='nopost') {
+				} else if(!empty($value) && $value=='nopost') {
 					$this->echoElement($key, false);
 				} else {
 					$this->echoElement($key);
@@ -120,13 +120,13 @@ class Form
 	
 	public function echoForm($leftclass = 'PizzaFormLabel', $rightclass = 'PizzaFormElement', $divortable = 'table') {
 		$output = '';
+		
+		$this->echoFormHead();
 	
 		if(isset($this->formarray['PizzaFormStructure']) && is_array($this->formarray['PizzaFormStructure'])) {
 			$this->echoStructure($this->formarray['PizzaFormStructure']);
 		} else {
-			$this->echoFormHead();
-			
-			foreach ($this->formarray as $key => $value) {
+			foreach ($this->formarray as $key => &$value) {
 				if($divortable=='table') {
 					$output .= "<tr><td class=\"$leftclass\">";
 					$output .= $this->echoLabel($key);
@@ -141,9 +141,10 @@ class Form
 					$output .= "</div>";
 				}
 			}
-			
-			$output .= '</form>';
 		}
+		
+		$output .= $this->echoElement('PizzaSubmitCheck');
+		$output .= '</form>';
 		
 		echo $output;
 	}
@@ -160,7 +161,7 @@ class Form
 		$temp = !empty(strval($details['id'])) ? strval($details['id']) : $temp;
 		$output .= " id=\"$temp\"";
 		
-		foreach ($details as $key => $value) {
+		foreach ($details as $key => &$value) {
 			if($key=='id' || $key=='name') {
 				continue;
 			}
@@ -197,7 +198,7 @@ class Form
 		$output .= " id=\"$temp\"";
 	
 		if($type=='select') {
-			
+			// TODO: SELECT FORM ELEMENT
 		} else {
 			$output = '<input' . $output;
 			
@@ -214,7 +215,7 @@ class Form
 				$output .= " value=\"$temp\"";
 			}
 			
-			foreach ($formvalues as $key => $value) {
+			foreach ($formvalues as $key => &$value) {
 				if($key=='id' || $key=='name' || $key=='type' || $key=='enteredvalue' || $key=='defaultvalue' || $key=='label') {
 					continue;
 				}
@@ -233,22 +234,34 @@ class Form
 		echo $output;
 	}
 	
+	// TODO: record when it returns invalid
+	// TODO: MAKE SURE THAT THE ENTERED VALUES HAVE BEEN SET FOR ALL FIELDS
 	public function validate() {
 		
 		$validator = new Pizza\Validate();
 	
-		foreach ($this->formarray as $fieldname => $value) {
+		foreach ($this->formarray as $fieldname => &$value) {
 			
 			foreach (array_keys($value['validation']) as $key) {
+				if($key=='sameas') {
+					if(isset($this->formarray[$value['validation'][$key]])) {
+						$validator->autoValidate($key, $value['enteredvalue'], $this->formarray[$value['validation'][$key]]['enteredvalue']);
+					} else {
+						// it is not valid
+					}
+				}
+			
 				// type, value, validation value
 				$validator->autoValidate($key, $value['enteredvalue'], $value['validation'][$key]);
 			}
 		}
+		
+		$validator = NULL;
 	}
 	
 	public function autoFillFormFromPost() {
-		foreach ($this->formarray as $key => $value) {
-			if($key!='PizzaFormDetails') {
+		foreach ($this->formarray as $key => &$value) {
+			if($key!='PizzaFormDetails' && key!='PizzaFormStructure') {
 			
 				// strip out [] from end of fields
 				str_replace('[]', '', $key);
