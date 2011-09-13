@@ -1,5 +1,7 @@
 <?php namespace Pizza;
 
+// TODO: MAKE BASE DATABASE CLASS
+
 class MySQLDatabase
 {
 	private $con;
@@ -45,7 +47,7 @@ class MySQLDatabase
 		return mysql_query($sql);
 	}
 	
-	public function selectFirst($columns, $table, $condition = '', $result_type = MYSQL_ASSOC) {
+	public function selectRange($columns, $table, $start, $end, $condition = '', $result_type = MYSQL_ASSOC) {
 		$columns = $this->escapeString($columns);
 		$sql = "SELECT $columns FROM $table";
 		
@@ -53,12 +55,21 @@ class MySQLDatabase
 			$sql .= " WHERE $condition";
 		}
 		
-		$sql .= ' LIMIT 1;';
+		$sql .= ' LIMIT '.$start.', '.($end-start+1).';';
 		$result = mysql_query($sql);
 		$row = mysql_fetch_array($result, $result_type);
 		mysql_free_result($result);
 		
 		return $row;
+	}
+	
+	public function selectFirst($columns, $table, $condition = '', $result_type = MYSQL_ASSOC) {
+		return $this->selectRange($columns, $table, 0, 0, $condition, $result_type);
+	}
+	
+	public function selectPage($columns, $table, $page, $rowsperpage, $condition = '', $result_type = MYSQL_ASSOC) {
+		$start = (intval($page) - 1) * intval($rowsperpage);
+		return $this->selectRange($columns, $table, $start, $rowsperpage, $condition, $result_type);
 	}
 	
 	public function count($table, $condition = '') {

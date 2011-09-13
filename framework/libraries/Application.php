@@ -10,7 +10,7 @@ class Application
 	function __construct($root, $param, $debugging) {
 		$this->root = $root;
 		$this->param = $param;
-		$this->errors = $errors;
+		$this->debugging = $debugging;
 		// count the number of parameters
 		$this->paramcount = 0;
 		while($this->paramcount<count($param) && !empty($param[$this->paramcount])) {
@@ -18,7 +18,7 @@ class Application
 		}
 	}
 
-	public static function redirect($page, $includeparameters = true) {
+	public function redirect($page, $includeparameters = true) {
 		$url = $this->root . '/';
 		$url .= $page;
 		
@@ -58,6 +58,10 @@ class Application
 	
 	public function getParameterCount() {
 		return $this->paramcount;
+	}
+	
+	public function getRoot() {
+		return $this->root;
 	}
 	
 	public function __get($root) {
