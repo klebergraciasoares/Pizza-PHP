@@ -66,6 +66,10 @@ class Validate {
 		return $this->regex($string, '^[\x00-\x7F]*$');
 	}
 	
+	public function isName($string) {
+		return $this->regex($string, '^[a-zA-Z \-]*$');
+	}
+	
 	public function isAlphaNumeric($string) {
 		return $this->regex($string, '^[a-zA-Z0-9]*$');
 	}
@@ -91,6 +95,8 @@ class Validate {
 				return $this->decimal($value, $validationparameter);
 			case 'email':
 				return $this->isEmail($value);
+			case 'name':
+				return $this->isName($value);
 			case 'url':
 				return $this->isURL($value, $validationparameter);
 			case 'presence':

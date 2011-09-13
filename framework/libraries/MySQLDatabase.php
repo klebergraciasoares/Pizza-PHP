@@ -84,7 +84,9 @@ class MySQLDatabase
 		$row = mysql_fetch_assoc($result);
 		mysql_free_result($result);
 		
-		return $row['total'];
+		$count = intval($row['total']);
+		
+		return $count;
 	}
 	
 	public function escapeString($string) {

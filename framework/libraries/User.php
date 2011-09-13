@@ -20,12 +20,12 @@ class User {
 	private function deleteOldSessions(&$db) {
 		$maxtime = $GLOBALS['maxsessionperiod'];
 		
-		$sql = 'DELETE FROM PizzaUserSessions WHERE (timestamp+$maxtime)>NOW();';
+		$sql = "DELETE FROM PizzaUserSessions WHERE (timestamp+'$maxtime')>NOW();";
 		$db->query($sql);
 	}
 	
 	public static function logout(&$db) {
-		$this->deleteOldSession();
+		$this->deleteOldSessions($db);
 		
 		$vars = $_SESSION;
 		$_SESSION = array();
@@ -103,12 +103,44 @@ class User {
 		return false;
 	}
 	
+	public function checkSession(&$db) {
+	
+		$this->deleteOldSessions($db);
+	
+		// if session variables set
+		if (isset($_SESSION['PizzaUserID']) && isset($_SESSION['PizzaUserTime']) && isset($_SESSION['PizzaUserBrowser'])) {
+			//if the user browser is the same
+			if ($_SESSION['PizzaUserBrowser']==md5($_SERVER['HTTP_USER_AGENT'] . $GLOBALS['random2'])) {
+				// if the session hasn't timed out
+				if ((intval($_SESSION['PizzaUserTime']) + intval($GLOBALS['maxsessionperiod']))>strtotime('now')) {
+					// if the use has the correct session cookie
+					if (isset($_COOKIE['PizzaUserSession'])) {
+						$session = $_COOKIE['PizzaUserSession'];
+						
+						$row = $db->selectFirst('PizzaUserID, password, salt', 'PizzaUser', $this->usernamefield."='$username'");
+						$userid = $row['PizzaUserID'];
+						
+						// if session cookie matches one in the database
+						if ($db->count('PizzaUserSessions', "userid='$userid' && sessionpass='$session'")>0) {
+							// they are logged in
+							$this->loggedin = true;
+							return true;
+						}
+					}
+				}
+			}
+		}
+		
+		User::logout($db);
+		return false;
+	}
+	
 	public function checkUserSession(&$db) {
 		return false;
 	}
 	
 	public function isLoggedIn() {
-		return true;
+		return $this->loggedin;
 	}
 }
 
