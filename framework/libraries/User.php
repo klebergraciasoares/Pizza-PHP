@@ -20,7 +20,7 @@ class User {
 	private function deleteOldSessions(&$db) {
 		$maxtime = $GLOBALS['maxsessionperiod'];
 		
-		$sql = "DELETE FROM PizzaUserSessions WHERE (timestamp+'$maxtime')>NOW();";
+		$sql = "DELETE FROM PizzaUserSessions WHERE (lastupdate+'$maxtime')>NOW();";
 		$db->query($sql);
 	}
 	
@@ -124,6 +124,13 @@ class User {
 						if ($db->count('PizzaUserSessions', "userid='$userid' && sessionpass='$session'")>0) {
 							// they are logged in
 							$this->loggedin = true;
+							
+							// set equal to expire time
+							setcookie('PizzaUserSession', $session, time()+$GLOBALS['maxsessionperiod'], '/', $GLOBALS['cookiedomain']);
+							
+							$sql = "UPDATE PizzaUserSessions SET lastupdate=NOW() WHERE userid='$userid' && sessionpass='$session' LIMIT 1";
+							$db->query($sql);
+							
 							return true;
 						}
 					}

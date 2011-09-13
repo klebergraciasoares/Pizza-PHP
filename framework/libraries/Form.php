@@ -290,4 +290,12 @@ class Form
 		
 		return '';
 	}
+	
+	public function getID($fieldname) {
+		if(!empty($this->formarray[$fieldname]['id'])) {
+			return $this->formarray[$fieldname]['id'];
+		}
+		
+		return $fieldname;
+	}
 }
